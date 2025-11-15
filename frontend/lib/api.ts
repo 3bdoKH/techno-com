@@ -108,6 +108,16 @@ class ApiClient {
     }
 
     // Hero endpoints
+    async getActiveHero() {
+        const url = `${this.baseURL}/hero/active`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch active hero');
+        }
+        return data;
+    }
+
     async getHeroes() {
         return this.request('/hero');
     }

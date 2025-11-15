@@ -24,14 +24,10 @@ const Hero = () => {
 
     const fetchActiveHero = async () => {
         try {
-            const response = await api.getHeroes();
-            if (response.success && Array.isArray(response.data)) {
-                const active = response.data.find((hero: HeroData) => hero.isActive);
-                if (active) {
-                    setHeroData(active as HeroData);
-                }
+            const response = await api.getActiveHero();
+            if (response.success && response.data) {
+                setHeroData(response.data as HeroData);
             }
-            console.log(response.data)
         } catch (error) {
             console.error('Error fetching hero:', error);
         } finally {
@@ -48,15 +44,24 @@ const Hero = () => {
     }
 
     const title = heroData?.title || "GLOBAL LEADERS IN\nDEFENSE & SECURITY SOLUTIONS";
-    const backgroundImage = heroData?.backgroundImage || '/hero.png';
+    const backgroundImagePath = heroData?.backgroundImage || '/hero.png';
     const ctaText = heroData?.ctaText || "Explore";
     const ctaLink = heroData?.ctaLink || "#";
 
+    const getImageUrl = (imagePath: string) => {
+        if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+            return imagePath;
+        }
+        if (imagePath.startsWith('/')) {
+            return `${process.env.NEXT_PUBLIC_UPLOADS_URL}${imagePath}`;
+        }
+        return `${process.env.NEXT_PUBLIC_UPLOADS_URL}/${imagePath}`;
+    };
 
     return (
         <div
             className="bg-cover h-screen flex items-center justify-center relative"
-            style={{ backgroundImage: `url('${process.env.NEXT_PUBLIC_UPLOADS_URL}${backgroundImage}')` }}
+            style={{ backgroundImage: `url('${getImageUrl(backgroundImagePath)}')` }}
         >
             <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-black/50 to-transparent"></div>
             <div className="container mx-auto pl-10 pr-10 py-8 items-center justify-center flex-col md:pl-40 relative z-10">
