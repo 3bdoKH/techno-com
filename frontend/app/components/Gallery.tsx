@@ -25,14 +25,12 @@ const Gallery = () => {
 
     const loadGalleryItems = async () => {
         try {
-            const response = await api.getGalleryItems();
+            const response = await api.getPublicGalleryItems();
             if (response.success && response.data) {
                 const activeItems = (response.data as GalleryItem[])
-                    .filter(item => item.isActive)
                     .sort((a, b) => a.order - b.order)
                     .slice(0, 3);
                 setGalleryItems(activeItems);
-                console.log(response.data)
             }
         } catch (error) {
             console.error('Error loading gallery items:', error);

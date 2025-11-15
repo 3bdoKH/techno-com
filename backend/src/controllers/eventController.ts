@@ -1,8 +1,29 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Event from '../models/Event';
 import { AuthRequest } from '../middleware/auth';
 import fs from 'fs';
 import path from 'path';
+
+export const getPublicEvents = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { category, featured } = req.query;
+        const filter: any = { isActive: true };
+
+        if (category) filter.category = category;
+        if (featured) filter.featured = featured === 'true';
+
+        const events = await Event.find(filter).sort({ date: -1 });
+
+        res.json({
+            success: true,
+            data: events,
+            count: events.length,
+        });
+    } catch (error) {
+        console.error('Get public events error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch events' });
+    }
+};
 
 export const getAllEvents = async (req: AuthRequest, res: Response): Promise<void> => {
     try {

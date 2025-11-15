@@ -26,19 +26,18 @@ const IndustryEvents = () => {
 
     const loadEvents = async () => {
         try {
-            const response = await api.getEvents();
+            const response = await api.getPublicEvents();
             if (response.success && response.data) {
                 const allEvents = response.data as Event[];
-                const activeEvents = allEvents
-                    .filter(event => event.isActive)
+                const sortedEvents = allEvents
                     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-                const featured = activeEvents.find(event => event.featured) || null;
+                const featured = sortedEvents.find(event => event.featured) || null;
                 setFeaturedEvent(featured);
 
                 const listEvents = featured
-                    ? activeEvents.filter(event => event._id !== featured._id)
-                    : activeEvents;
+                    ? sortedEvents.filter(event => event._id !== featured._id)
+                    : sortedEvents;
 
                 setEvents(listEvents);
             }

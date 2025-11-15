@@ -269,6 +269,21 @@ class ApiClient {
     }
 
     // Events endpoints
+    async getPublicEvents(filters?: { category?: string; featured?: boolean }) {
+        const params = new URLSearchParams();
+        if (filters?.category) params.append('category', filters.category);
+        if (filters?.featured !== undefined) params.append('featured', String(filters.featured));
+
+        const query = params.toString() ? `?${params.toString()}` : '';
+        const url = `${this.baseURL}/events/public${query}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch events');
+        }
+        return data;
+    }
+
     async getEvents(filters?: { category?: string; featured?: boolean }) {
         const params = new URLSearchParams();
         if (filters?.category) params.append('category', filters.category);
@@ -333,6 +348,17 @@ class ApiClient {
     }
 
     // Gallery endpoints
+    async getPublicGalleryItems(category?: string) {
+        const query = category ? `?category=${category}` : '';
+        const url = `${this.baseURL}/gallery/public${query}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to fetch gallery items');
+        }
+        return data;
+    }
+
     async getGalleryItems(category?: string) {
         const query = category ? `?category=${category}` : '';
         return this.request(`/gallery${query}`);

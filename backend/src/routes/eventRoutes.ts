@@ -7,6 +7,8 @@ import { upload } from '../config/multer';
 
 const router = Router();
 
+router.get('/public', eventController.getPublicEvents);
+
 router.get('/', authenticateToken, eventController.getAllEvents);
 router.get('/:id', authenticateToken, eventController.getEventById);
 

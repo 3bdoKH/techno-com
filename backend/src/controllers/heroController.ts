@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Hero from '../models/Hero';
 import { AuthRequest } from '../middleware/auth';
 import fs from 'fs';
@@ -38,7 +38,7 @@ export const getHeroById = async (req: AuthRequest, res: Response): Promise<void
     }
 };
 
-export const getActiveHero = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getActiveHero = async (req: Request, res: Response): Promise<void> => {
     try {
         const hero = await Hero.findOne({ isActive: true }).sort({ createdAt: -1 });
 

@@ -7,6 +7,8 @@ import { upload } from '../config/multer';
 
 const router = Router();
 
+router.get('/public', galleryController.getPublicGalleryItems);
+
 router.get('/', authenticateToken, galleryController.getAllGalleryItems);
 router.get('/:id', authenticateToken, galleryController.getGalleryItemById);
 

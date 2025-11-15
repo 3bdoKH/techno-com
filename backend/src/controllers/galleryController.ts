@@ -1,8 +1,27 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Gallery from '../models/Gallery';
 import { AuthRequest } from '../middleware/auth';
 import fs from 'fs';
 import path from 'path';
+
+export const getPublicGalleryItems = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { category } = req.query;
+        const filter: any = { isActive: true };
+        if (category) filter.category = category;
+
+        const galleryItems = await Gallery.find(filter).sort({ order: 1, createdAt: -1 });
+
+        res.json({
+            success: true,
+            data: galleryItems,
+            count: galleryItems.length,
+        });
+    } catch (error) {
+        console.error('Get public gallery items error:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch gallery items' });
+    }
+};
 
 export const getAllGalleryItems = async (req: AuthRequest, res: Response): Promise<void> => {
     try {
